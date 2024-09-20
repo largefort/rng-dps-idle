@@ -1,23 +1,21 @@
-body {
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
+    color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    margin: 0;
+    min-height: 100vh;
 }
 
-.game-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-}
-
+/* Title Screen */
 .title-screen {
     display: flex;
     flex-direction: column;
@@ -26,91 +24,168 @@ body {
     height: 100vh;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-button:disabled {
-    background-color: grey;
-    cursor: not-allowed;
-}
-
-#resource-container, #upgrade-container, #building-container, #enemy-container, #crafting-container {
+.title-screen h1 {
+    font-size: 3rem;
     margin-bottom: 20px;
 }
 
-.health-bar {
-    width: 100%;
-    height: 20px;
-    background-color: #e0e0e0;
+.title-screen button {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    background-color: #5c6bc0;
+    color: white;
     border-radius: 5px;
-    margin-top: 5px;
+}
+
+.title-screen button:hover {
+    background-color: #3f51b5;
+}
+
+/* Game container */
+.game-container {
+    display: none; /* Hide by default, shown after start */
+    max-width: 1200px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+#resources, #dps, #level, #player-health {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Stats Container */
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.stats-container div {
+    background-color: #eceff1;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    width: 48%;
+}
+
+.stats-container h2 {
+    margin-bottom: 10px;
+}
+
+/* Enemy Section */
+.enemy-container {
+    margin-top: 20px;
+    border: 2px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fafafa;
+}
+
+.enemy-container h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
 }
 
 #enemy-health-bar {
-    height: 100%;
-    background-color: #4caf50;
+    height: 20px;
+    background-color: #e57373;
+    border-radius: 10px;
     width: 100%;
-    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
-#damage-text-container {
-    position: relative;
-    height: 50px;
-}
-
-.damage-text {
-    position: absolute;
-    font-size: 14px;
-    animation: damageText 1s forwards;
-    color: red;
+#enemy-resistance {
     font-weight: bold;
 }
 
-@keyframes damageText {
+/* Equipment/Crafting Container */
+.crafting-container {
+    margin-top: 20px;
+    background-color: #eceff1;
+    padding: 15px;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.crafting-container h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
+
+#crafting-list {
+    list-style: none;
+}
+
+#crafting-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#crafting-list li:last-child {
+    border-bottom: none;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3f51b5;
+}
+
+/* Damage Text Animation */
+.damage-text {
+    position: absolute;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ff5252;
+    animation: damageFloat 1s ease-in-out forwards;
+}
+
+@keyframes damageFloat {
     0% {
         opacity: 1;
         transform: translateY(0);
     }
     100% {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-40px);
     }
 }
 
-#crafting-container {
-    height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-top: 20px;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stats-container {
+        flex-direction: column;
+    }
+
+    .stats-container div {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .game-container {
+        padding: 15px;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
 }
 
-#crafting-container ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-#crafting-container li {
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    margin-left: 5px;
-}
-
-#enemy-container {
-    margin-bottom: 30px;
-}
-
-.game-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
