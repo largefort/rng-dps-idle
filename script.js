@@ -211,13 +211,26 @@ function updateDisplay() {
     document.getElementById('tower-cost').innerText = towerCost;
     document.getElementById('castle-cost').innerText = castleCost;
     document.getElementById('defense-cost').innerText = defenseCost;
-    document.getElementById('enemy-name').innerText = enemyName;
-    document.getElementById('enemy-health').innerText = enemyHP.toFixed(0);
-    document.getElementById('enemy-resistance').innerText = enemyResistance || 'None';
+    document.getElementById('enemy-name').innerText = enemyName || 'Unknown';
+    
+    // Check if enemyHP is properly defined
+    if (enemyHP !== undefined && !isNaN(enemyHP)) {
+        document.getElementById('enemy-health').innerText = enemyHP.toFixed(0);
+    } else {
+        document.getElementById('enemy-health').innerText = 'N/A';
+    }
 
-    let healthPercent = (enemyHP / maxEnemyHP) * 100;
-    document.getElementById('enemy-health-bar').style.width = healthPercent + '%';
+    // Check if maxEnemyHP is properly defined for the health bar
+    if (maxEnemyHP !== undefined && !isNaN(maxEnemyHP) && enemyHP !== undefined && !isNaN(enemyHP)) {
+        let healthPercent = (enemyHP / maxEnemyHP) * 100;
+        document.getElementById('enemy-health-bar').style.width = healthPercent + '%';
+    } else {
+        document.getElementById('enemy-health-bar').style.width = '0%';
+    }
+    
+    document.getElementById('enemy-resistance').innerText = enemyResistance || 'None';
 }
+
 
 // Initial setup and game start
 function startGame() {
