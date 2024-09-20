@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNG DPS Tycoon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-screen">
+        <h1>RNG DPS Tycoon</h1>
+        <button id="play-btn">Play</button>
+    </div>
+
+    <div class="game-container" style="display: none;">
+        <h1>RNG DPS Tycoon</h1>
+
+        <div id="resource-container">
+            <p>Total Resources: <span id="resources">0</span></p>
+            <p>DPS: <span id="dps">0</span></p>
+            <p>Player Health: <span id="player-health">100</span></p>
+            <p>Current Level: <span id="level">1</span> / 10,000</p>
+        </div>
+
+        <div id="enemy-container">
+            <h2>Enemy</h2>
+            <p>Enemy Name: <span id="enemy-name"></span></p>
+            <p>Health: <span id="enemy-health">0</span></p>
+            <p>Resistance: <span id="enemy-resistance">None</span></p>
+            <div class="health-bar">
+                <div id="enemy-health-bar"></div>
+            </div>
+        </div>
+
+        <div id="action-container">
+            <button id="attack-btn">Attack for Random DPS</button>
+        </div>
+
+        <div id="damage-text-container"></div>
+
+        <div id="upgrade-container">
+            <h2>Upgrades</h2>
+            <button id="upgrade-dps-btn">Upgrade DPS (Cost: <span id="upgrade-cost">10</span>)</button>
+        </div>
+
+        <div id="building-container">
+            <h2>Buildings</h2>
+            <button id="buy-minion-btn">Buy Minion (Cost: <span id="minion-cost">50</span>) - +0.5 DPS</button><br>
+            <button id="buy-tower-btn">Buy Tower (Cost: <span id="tower-cost">200</span>) - +2 DPS</button><br>
+            <button id="buy-castle-btn">Buy Castle (Cost: <span id="castle-cost">1000</span>) - +10 DPS</button><br>
+            <button id="buy-defense-btn">Buy Defense (Cost: <span id="defense-cost">300</span>) - Reduces damage by 5</button>
+        </div>
+
+        <div id="crafting-container">
+            <h2>Crafting</h2>
+            <p>Craft new equipment to strengthen your player!</p>
+            <ul id="crafting-list"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
