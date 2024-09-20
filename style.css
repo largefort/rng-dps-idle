@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+.game-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.title-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+#resource-container, #upgrade-container, #building-container, #enemy-container, #crafting-container {
+    margin-bottom: 20px;
+}
+
+.health-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+#enemy-health-bar {
+    height: 100%;
+    background-color: #4caf50;
+    width: 100%;
+    border-radius: 5px;
+}
+
+#damage-text-container {
+    position: relative;
+    height: 50px;
+}
+
+.damage-text {
+    position: absolute;
+    font-size: 14px;
+    animation: damageText 1s forwards;
+    color: red;
+    font-weight: bold;
+}
+
+@keyframes damageText {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
