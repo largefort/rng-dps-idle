@@ -1,105 +1,80 @@
-// Local storage keys
-const saveKey = 'RNGDPS_save';
-
-// Game state variables
+// Variables for game state
 let totalResources = 0;
 let currentDPS = 0;
-let upgradeCost = 10;
 let baseDPS = 1;
-let currentLevel = 1;
-let maxLevel = 10000;
-let resourcesPerLevel = 100;
-let levelProgress = 0;
-let enemyHP, maxEnemyHP;
-let enemyName, enemyResistance;
 let playerHealth = 100;
 let defensePower = 0;
-let craftedEquipment = []; // List of crafted equipment
-let equipmentCount = 35;
-let equipmentList = generateEquipment(); // Equipment available to craft
+let currentLevel = 1;
+let maxLevel = 10000;
+let enemyName = '';
+let enemyHP;
+let maxEnemyHP;
+let enemyResistance;
+let damageTypes = ['Physical', 'Fire', 'Ice'];
+let upgradeCost = 100;
+let minionCost = 150;
+let towerCost = 200;
+let castleCost = 250;
+let defenseCost = 50;
+let equipmentList = [];
+let playerEquipment = [];
+let craftingResources = 0;
 
-// Enemy resistances and damage types
-const damageTypes = ['physical', 'fire', 'ice'];
-const enemies = [
-    { name: 'Goblin', health: 50, resistance: 'fire' },
-    { name: 'Orc', health: 200, resistance: 'ice' },
-    { name: 'Troll', health: 500, resistance: 'physical' },
-];
-
-const bosses = [
-    { name: 'Dragon', health: 1000, resistance: 'fire' },
-    { name: 'Giant', health: 2000, resistance: 'physical' },
-];
-
-// Building costs and DPS contributions
-let minionCost = 50, towerCost = 200, castleCost = 1000, defenseCost = 300;
-let minionDPS = 0.5, towerDPS = 2, castleDPS = 10;
-let enemyDamage = 10; // Default enemy damage per attack
-
-// Load the game from localStorage if available
-function loadGame() {
-    const savedGame = JSON.parse(localStorage.getItem(saveKey));
-    if (savedGame) {
-        totalResources = savedGame.totalResources;
-        currentDPS = savedGame.currentDPS;
-        upgradeCost = savedGame.upgradeCost;
-        baseDPS = savedGame.baseDPS;
-        currentLevel = savedGame.currentLevel;
-        maxLevel = savedGame.maxLevel;
-        playerHealth = savedGame.playerHealth;
-        defensePower = savedGame.defensePower;
-        craftedEquipment = savedGame.craftedEquipment || [];
-        updateCraftingUI();
-        updateDisplay();
-    }
-}
-
-// Save the game state to localStorage
+// Auto-save/load using localStorage
 function saveGame() {
-    const gameState = {
+    const gameData = {
         totalResources,
         currentDPS,
-        upgradeCost,
         baseDPS,
-        currentLevel,
-        maxLevel,
         playerHealth,
         defensePower,
-        craftedEquipment
+        currentLevel,
+        playerEquipment,
     };
-    localStorage.setItem(saveKey, JSON.stringify(gameState));
+    localStorage.setItem('gameData', JSON.stringify(gameData));
 }
 
-// Generate 35 equipment items
-function generateEquipment() {
-    const equipment = [];
-    for (let i = 0; i < equipmentCount; i++) {
-        const type = i % 3 === 0 ? 'Weapon' : 'Armor';
-        const strength = Math.floor(Math.random() * 10) + 5;
-        equipment.push({ id: i, name: `Equipment ${i + 1}`, type, strength, crafted: false });
+function loadGame() {
+    const savedData = JSON.parse(localStorage.getItem('gameData'));
+    if (savedData) {
+        totalResources = savedData.totalResources || 0;
+        currentDPS = savedData.currentDPS || 0;
+        baseDPS = savedData.baseDPS || 1;
+        playerHealth = savedData.playerHealth || 100;
+        defensePower = savedData.defensePower || 0;
+        currentLevel = savedData.currentLevel || 1;
+        playerEquipment = savedData.playerEquipment || [];
     }
-    return equipment;
 }
 
-// Update crafting UI
+// Generate random enemy for each level
+function getEnemyForLevel() {
+    const enemyBaseHealth = 100;
+    const resistances = ['Physical', 'Fire', 'Ice', null];
+    const randomResistance = resistances[Math.floor(Math.random() * resistances.length)];
+    return {
+        name: `Enemy Level ${currentLevel}`,
+        health: enemyBaseHealth * Math.pow(1.2, currentLevel),
+        resistance: randomResistance
+    };
+}
+
+// Equipment crafting
 function updateCraftingUI() {
     const craftingList = document.getElementById('crafting-list');
     craftingList.innerHTML = '';
-    equipmentList.forEach(equipment => {
-        if (!equipment.crafted) {
+    equipmentList.forEach((equipment, index) => {
+        if (equipment.cost <= totalResources) {
             const li = document.createElement('li');
-            li.innerText = `${equipment.name} (Type: ${equipment.type}, Strength: ${equipment.strength}) - Cost: ${equipment.strength * 100} resources`;
+            li.innerText = `${equipment.name} (Type: ${equipment.type}, Strength: ${equipment.strength}) - Cost: ${equipment.cost} resources`;
             const craftBtn = document.createElement('button');
             craftBtn.innerText = 'Craft';
             craftBtn.addEventListener('click', () => {
-                if (totalResources >= equipment.strength * 100) {
-                    totalResources -= equipment.strength * 100;
-                    equipment.crafted = true;
-                    craftedEquipment.push(equipment);
-                    applyEquipmentBonus(equipment);
-                    updateCraftingUI();
-                    updateDisplay();
-                }
+                totalResources -= equipment.cost;
+                playerEquipment.push(equipment);
+                applyEquipmentBonus(equipment);
+                updateCraftingUI();
+                updateDisplay();
             });
             li.appendChild(craftBtn);
             craftingList.appendChild(li);
@@ -194,13 +169,19 @@ function levelUp() {
     if (currentLevel <= maxLevel) {
         let newEnemy = getEnemyForLevel();
         enemyName = newEnemy.name;
-        maxEnemyHP = newEnemy.health * Math.pow(1.2, currentLevel);
+        maxEnemyHP = newEnemy.health;
         enemyHP = maxEnemyHP;
         enemyResistance = newEnemy.resistance;
+    } else {
+        enemyName = 'No more enemies';
+        enemyHP = undefined;
+        maxEnemyHP = undefined;
+        enemyResistance = 'None';
     }
     updateDisplay();
 }
 
+// Update the display with game stats
 function updateDisplay() {
     document.getElementById('resources').innerText = totalResources.toFixed(0);
     document.getElementById('dps').innerText = currentDPS.toFixed(1);
@@ -230,7 +211,6 @@ function updateDisplay() {
     
     document.getElementById('enemy-resistance').innerText = enemyResistance || 'None';
 }
-
 
 // Initial setup and game start
 function startGame() {
